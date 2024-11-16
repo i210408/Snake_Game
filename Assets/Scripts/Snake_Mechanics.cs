@@ -6,20 +6,35 @@ public class Snake_Mechanics : MonoBehaviour
 {
     public Transform Snake_head;
     public Vector2 direction = Vector2.right;
-    public float speed = 0.1f;
+    public float speed;
     public Transform Food;
     public Collider2D grid;
     public Bounds bound;
-
-
+    private int score;
+    private int highScore;
+    public GameplayUI gameplayUIReference;
     List<Transform> list = new List<Transform>();
     public Transform snake_segment;
+    bool isPaused;
+
+    private void Awake()
+    {
+        speed = PlayerPrefs.GetFloat("snakeSpeed", 0.2f);
+    }
     // Start is called before the first frame update
     void Start()
     {
+        isPaused = false;
+        score = 0;
+        highScore = PlayerPrefs.GetInt("highScore1", 0);
+        gameplayUIReference.DisplayScore(score);
+        gameplayUIReference.DisplayHighScore(highScore);
         bound = grid.bounds;
         Time.fixedDeltaTime = speed;
         list.Add(Snake_head);
+        grow();
+        grow();
+        grow();
     }
 
     // Update is called once per frame
@@ -27,7 +42,6 @@ public class Snake_Mechanics : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-
             direction = Vector2.up;
         }
         else if (Input.GetKey(KeyCode.S))
@@ -41,6 +55,18 @@ public class Snake_Mechanics : MonoBehaviour
         else if (Input.GetKey(KeyCode.D))
         {
             direction = Vector2.right;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == false)
+        {
+            gameplayUIReference.DisplayPauseScreen();
+            Time.timeScale = 0;
+            isPaused = true;
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == true)
+        {
+            gameplayUIReference.HidePauseScreen();
+            Time.timeScale = 1;
+            isPaused = false;
         }
     }
     private void FixedUpdate()
@@ -66,12 +92,22 @@ public class Snake_Mechanics : MonoBehaviour
             }
             list.Clear();
             list.Add(Snake_head);
+
+            if (score > highScore)
+            {
+                highScore = score;
+                PlayerPrefs.SetInt("highScore1", highScore);
+            }
+            gameplayUIReference.DisplayGameOverScore(score);
+            gameplayUIReference.DisplayGameOverScreen();
+            Time.timeScale = 0;
         }
         else if (collision.tag == "Food")
         {
             randomizeFood();
             grow();
-            
+            score++;
+            gameplayUIReference.DisplayScore(score);
         }
     }
 
@@ -89,4 +125,10 @@ public class Snake_Mechanics : MonoBehaviour
         temp.position = list[list.Count-1].position;
         list.Add(temp);
     }
+    public void UpdateSnakeSpeed(float speed)
+    {
+        this.speed = speed;
+        Time.fixedDeltaTime = speed;
+        PlayerPrefs.SetFloat("snakeSpeed", speed);
+    } 
 }
