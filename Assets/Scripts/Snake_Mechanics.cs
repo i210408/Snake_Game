@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Snake_Mechanics : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class Snake_Mechanics : MonoBehaviour
     List<Transform> list = new List<Transform>();
     public Transform snake_segment;
     bool isPaused;
+    public AudioManager audioManagerReference;
+    public int currentLevel;
+    public LayerMask obstacleLayer;
 
     private void Awake()
     {
@@ -26,7 +30,7 @@ public class Snake_Mechanics : MonoBehaviour
     {
         isPaused = false;
         score = 0;
-        highScore = PlayerPrefs.GetInt("highScore1", 0);
+        highScore = PlayerPrefs.GetInt("highScore" + currentLevel.ToString(), 0);
         gameplayUIReference.DisplayScore(score);
         gameplayUIReference.DisplayHighScore(highScore);
         bound = grid.bounds;
@@ -96,7 +100,7 @@ public class Snake_Mechanics : MonoBehaviour
             if (score > highScore)
             {
                 highScore = score;
-                PlayerPrefs.SetInt("highScore1", highScore);
+                PlayerPrefs.SetInt("highScore"+currentLevel.ToString(), highScore);
             }
             gameplayUIReference.DisplayGameOverScore(score);
             gameplayUIReference.DisplayGameOverScreen();
@@ -109,15 +113,38 @@ public class Snake_Mechanics : MonoBehaviour
             score++;
             gameplayUIReference.DisplayScore(score);
         }
+        else if (collision.tag == "Portal1")
+        {
+            Transform portal = GameObject.FindGameObjectWithTag("Portal2").GetComponent<Transform>();
+            Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y);
+        }
+        else if (collision.tag == "Portal2")
+        {
+            Transform portal = GameObject.FindGameObjectWithTag("Portal1").GetComponent<Transform>();
+            Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y); 
+        }
     }
 
     void randomizeFood()
     {
-        float x = Random.Range(bound.min.x,bound.max.x);
-        float y = Random.Range(bound.min.y, bound.max.y);
-        x = Mathf.Round(x);
-        y = Mathf.Round(y);
-        Food.position = new Vector2(x,y);
+        float x;
+        float y;
+        while(true)
+        {
+
+            x = Random.Range(bound.min.x,bound.max.x);
+            y = Random.Range(bound.min.y, bound.max.y);
+            x = Mathf.Round(x);
+            y = Mathf.Round(y);
+
+            Vector2 newPosition = new Vector2(x, y);
+            Collider2D blocked = Physics2D.OverlapPoint(newPosition, obstacleLayer);
+            if (blocked == null)
+            {
+                break;
+            }
+        }
+        Food.position = new Vector2(x,y);   
     }
     void grow()
     {

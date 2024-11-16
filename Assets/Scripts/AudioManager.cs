@@ -6,6 +6,9 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource audioSource;
     public AudioClip backgroundMusic;
+    public AudioClip eatSoundEffect;
+    public AudioClip gameOverSoundEffect;
+    public AudioClip buttonClickSoundEffect;
 
     private void Awake()
     {
@@ -20,5 +23,22 @@ public class AudioManager : MonoBehaviour
     {
         audioSource.volume = volume;
         PlayerPrefs.SetFloat("volume", volume);
+    }
+    private void InitializeBackgroundMusic()
+    {
+        audioSource.clip = backgroundMusic;
+        audioSource.Play();
+    }
+    public void PlayEatSoundEffect()
+    {
+        audioSource.PlayOneShot(eatSoundEffect);
+    }
+    public void PlayGameOverSoundEffect()
+    {
+        audioSource.PlayOneShot(gameOverSoundEffect);
+    }
+    public void PlayButtonClickSoundEffect()
+    {
+        audioSource.PlayOneShot(buttonClickSoundEffect);
     }
 }
