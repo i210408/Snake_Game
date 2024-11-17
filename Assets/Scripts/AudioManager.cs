@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip eatSoundEffect;
     public AudioClip gameOverSoundEffect;
     public AudioClip buttonClickSoundEffect;
+    public AudioClip teleportSoundEffect;
 
     private void Awake()
     {
@@ -17,7 +18,7 @@ public class AudioManager : MonoBehaviour
     }
     private void Start()
     {
-        
+        InitializeBackgroundMusic();
     }
     public void UpdateVolume(float volume)
     {
@@ -48,5 +49,10 @@ public class AudioManager : MonoBehaviour
     public void PlayButtonClickSoundEffect()
     {
         audioSource.PlayOneShot(buttonClickSoundEffect);
+    }
+
+    public void PlayTeleportSoundEffect()
+    {
+        audioSource.PlayOneShot(teleportSoundEffect);
     }
 }

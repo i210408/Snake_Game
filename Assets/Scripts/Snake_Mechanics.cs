@@ -65,12 +65,14 @@ public class Snake_Mechanics : MonoBehaviour
             gameplayUIReference.DisplayPauseScreen();
             Time.timeScale = 0;
             isPaused = true;
+            audioManagerReference.PlayButtonClickSoundEffect();
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == true)
         {
             gameplayUIReference.HidePauseScreen();
             Time.timeScale = 1;
             isPaused = false;
+            audioManagerReference.PlayButtonClickSoundEffect();
         }
     }
     private void FixedUpdate()
@@ -102,6 +104,7 @@ public class Snake_Mechanics : MonoBehaviour
                 highScore = score;
                 PlayerPrefs.SetInt("highScore"+currentLevel.ToString(), highScore);
             }
+            audioManagerReference.PlayGameOverSoundEffect();
             gameplayUIReference.DisplayGameOverScore(score);
             gameplayUIReference.DisplayGameOverScreen();
             Time.timeScale = 0;
@@ -112,16 +115,19 @@ public class Snake_Mechanics : MonoBehaviour
             grow();
             score++;
             gameplayUIReference.DisplayScore(score);
+            audioManagerReference.PlayEatSoundEffect();
         }
         else if (collision.tag == "Portal1")
         {
             Transform portal = GameObject.FindGameObjectWithTag("Portal2").GetComponent<Transform>();
             Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y);
+            audioManagerReference.PlayTeleportSoundEffect();
         }
         else if (collision.tag == "Portal2")
         {
             Transform portal = GameObject.FindGameObjectWithTag("Portal1").GetComponent<Transform>();
-            Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y); 
+            Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y);
+            audioManagerReference.PlayTeleportSoundEffect(); 
         }
     }
 
