@@ -24,10 +24,18 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = volume;
         PlayerPrefs.SetFloat("volume", volume);
     }
-    private void InitializeBackgroundMusic()
+    public void InitializeBackgroundMusic()
     {
-        audioSource.clip = backgroundMusic;
-        audioSource.Play();
+        int isMusic = PlayerPrefs.GetInt("isMusic", 1);
+        if(isMusic == 1)
+        {
+            audioSource.clip = backgroundMusic;
+            audioSource.Play();
+        }
+        else if (isMusic == 0)
+        {
+            audioSource.Stop();
+        }
     }
     public void PlayEatSoundEffect()
     {

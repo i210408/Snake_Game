@@ -55,7 +55,8 @@ public class GameplayUI : MonoBehaviour
     }
     public void DisplayMainMenu()
     {
-        Debug.Log("Main Menu Called");
+        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 1;
     }
     public void RestartLevel()
     {
