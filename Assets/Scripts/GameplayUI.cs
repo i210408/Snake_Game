@@ -15,10 +15,13 @@ public class GameplayUI : MonoBehaviour
     public Slider snakeSpeedSlider;
     public Slider volumeSlider;
     public Snake_Mechanics snakeMechanicsReference;
-    public AudioManager audioManagerReference; 
+    public AudioManager audioManagerReference;
+    private bool isPaused;
+    public GameObject gameplayScreen;
 
     private void Start()
     {
+        isPaused = false;
         snakeSpeedSlider.value = snakeMechanicsReference.speed;
         volumeSlider.value = audioManagerReference.audioSource.volume;
         gameOverScreen.SetActive(false);
@@ -28,6 +31,21 @@ public class GameplayUI : MonoBehaviour
     {
         snakeSpeedSlider.onValueChanged.AddListener(CallUpdateSnakeSpeed);
         volumeSlider.onValueChanged.AddListener(CallUpdateVolume);
+
+        if (Input.GetKeyDown(KeyCode.Escape) && isPaused == false)
+        {
+            DisplayPauseScreen();
+            gameplayScreen.SetActive(false);
+            isPaused = true;
+            audioManagerReference.PlayButtonClickSoundEffect();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == true)
+        {
+            HidePauseScreen();
+            gameplayScreen.SetActive(true);
+            isPaused = false;
+            audioManagerReference.PlayButtonClickSoundEffect();
+        }
     }
     public void DisplayScore(int score)
     {

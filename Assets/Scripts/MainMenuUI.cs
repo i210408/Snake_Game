@@ -13,12 +13,15 @@ public class MainMenuUI : MonoBehaviour
     public GameObject settings;
     public TextMeshProUGUI level1Score;
     public TextMeshProUGUI level2Score;
+    public TextMeshProUGUI musicText;
     public Slider snakeSpeedSlider;
     public Slider volumeSlider;
     public AudioManager audioManagerReference;
 
     private void Start()
     {
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 1;
         EnableMainMenu();
         DisableLevelSelect();
         DisableSettings();
@@ -27,6 +30,10 @@ public class MainMenuUI : MonoBehaviour
         snakeSpeedSlider.value = snakeSpeed;
         float volume = PlayerPrefs.GetFloat("volume", 0.5f);
         volumeSlider.value = volume;
+        if(PlayerPrefs.GetInt("isMusic", 1) == 0)
+        {
+            musicText.color = Color.grey;
+        }
     }
 
     private void Update()
@@ -101,11 +108,13 @@ public class MainMenuUI : MonoBehaviour
         if(isMusic == 1)
         {
             PlayerPrefs.SetInt("isMusic", 0);
+            musicText.color = Color.grey;
             audioManagerReference.InitializeBackgroundMusic();
         }
         else if (isMusic == 0)
         {
             PlayerPrefs.SetInt("isMusic", 1);
+            musicText.color = Color.white;
             audioManagerReference.InitializeBackgroundMusic();
         }
     }

@@ -16,10 +16,10 @@ public class Snake_Mechanics : MonoBehaviour
     public GameplayUI gameplayUIReference;
     List<Transform> list = new List<Transform>();
     public Transform snake_segment;
-    bool isPaused;
     public AudioManager audioManagerReference;
     public int currentLevel;
     public LayerMask obstacleLayer;
+    public GameObject gameplayScreen;
 
     private void Awake()
     {
@@ -28,7 +28,6 @@ public class Snake_Mechanics : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isPaused = false;
         score = 0;
         highScore = PlayerPrefs.GetInt("highScore" + currentLevel.ToString(), 0);
         gameplayUIReference.DisplayScore(score);
@@ -60,20 +59,7 @@ public class Snake_Mechanics : MonoBehaviour
         {
             direction = Vector2.right;
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == false)
-        {
-            gameplayUIReference.DisplayPauseScreen();
-            Time.timeScale = 0;
-            isPaused = true;
-            audioManagerReference.PlayButtonClickSoundEffect();
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused == true)
-        {
-            gameplayUIReference.HidePauseScreen();
-            Time.timeScale = 1;
-            isPaused = false;
-            audioManagerReference.PlayButtonClickSoundEffect();
-        }
+       
     }
     private void FixedUpdate()
     {
@@ -107,7 +93,7 @@ public class Snake_Mechanics : MonoBehaviour
             audioManagerReference.PlayGameOverSoundEffect();
             gameplayUIReference.DisplayGameOverScore(score);
             gameplayUIReference.DisplayGameOverScreen();
-            Time.timeScale = 0;
+            gameplayScreen.SetActive(false);
         }
         else if (collision.tag == "Food")
         {
