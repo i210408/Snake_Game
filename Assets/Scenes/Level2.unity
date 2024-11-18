@@ -1257,7 +1257,7 @@ MonoBehaviour:
   audioSource: {fileID: 577666174}
   backgroundMusic: {fileID: 8300000, guid: 4eb750ea5258870429e47dfa68849bce, type: 3}
   eatSoundEffect: {fileID: 8300000, guid: 6fe4576780404d54788689d6712bcd09, type: 3}
-  gameOverSoundEffect: {fileID: 8300000, guid: b274ada33b8655444abcc717d06cbac4, type: 3}
+  gameOverSoundEffect: {fileID: 8300000, guid: 9de7840dcb471124ba3f19e8c349c885, type: 3}
   buttonClickSoundEffect: {fileID: 8300000, guid: c614b8f0e98a5ca408aef9ea891d37d9, type: 3}
   teleportSoundEffect: {fileID: 8300000, guid: c76c59fb965905c479c513b5bdc64ed6, type: 3}
 --- !u!82 &577666174

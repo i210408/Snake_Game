@@ -77,23 +77,24 @@ public class Snake_Mechanics : MonoBehaviour
     {
         if(collision.tag == "Obstacle")
         {
-            Snake_head.position = Vector2.zero;
+            Time.fixedDeltaTime = 0;
+
+            /*Snake_head.position = Vector2.zero;
             for(int i = 1; i < list.Count; i++)
             {
                 Destroy(list[i].gameObject);
             }
             list.Clear();
-            list.Add(Snake_head);
+            list.Add(Snake_head);*/
 
             if (score > highScore)
             {
                 highScore = score;
                 PlayerPrefs.SetInt("highScore"+currentLevel.ToString(), highScore);
             }
+            audioManagerReference.audioSource.Stop();
             audioManagerReference.PlayGameOverSoundEffect();
-            gameplayUIReference.DisplayGameOverScore(score);
-            gameplayUIReference.DisplayGameOverScreen();
-            gameplayScreen.SetActive(false);
+            StartCoroutine("GameOver");
         }
         else if (collision.tag == "Food")
         {
@@ -115,6 +116,13 @@ public class Snake_Mechanics : MonoBehaviour
             Snake_head.position = new Vector2(portal.position.x + direction.x, portal.position.y + direction.y);
             audioManagerReference.PlayTeleportSoundEffect(); 
         }
+    }
+    private IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(1f);
+        gameplayUIReference.DisplayGameOverScore(score);
+        gameplayUIReference.DisplayGameOverScreen();
+        gameplayScreen.SetActive(false);
     }
 
     void randomizeFood()
