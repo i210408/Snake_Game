@@ -35,6 +35,7 @@ public class Snake_Mechanics : MonoBehaviour
         bound = grid.bounds;
         Time.fixedDeltaTime = speed;
         list.Add(Snake_head);
+        Snake_head.rotation = Quaternion.Euler(0f, 0f, 90f);
         grow();
         grow();
         grow();
@@ -46,18 +47,22 @@ public class Snake_Mechanics : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             direction = Vector2.up;
+            Snake_head.rotation = Quaternion.Euler(0f, 0f, 180f);
         }
         else if (Input.GetKey(KeyCode.S))
         {
             direction = Vector2.down;
+            Snake_head.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else if (Input.GetKey(KeyCode.A))
         {
             direction = Vector2.left;
+            Snake_head.rotation = Quaternion.Euler(0f, 0f, 270f);
         }
         else if (Input.GetKey(KeyCode.D))
         {
             direction = Vector2.right;
+            Snake_head.rotation = Quaternion.Euler(0f, 0f, 90f);
         }
        
     }
