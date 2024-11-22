@@ -1,79 +1,73 @@
+// 21i-0408
+// 21i-0425
+
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class msSnake : MonoBehaviour
 {
     public Transform snakeHead;
     public GameObject[] pathPoints;
-    public float speed = 1f;
     public Transform snakeSegmentPrefab;
     public int initialTailLength = 3;
-
+    public Vector2 headDirection = Vector2.right;
     private List<Transform> tailSegments = new List<Transform>();
     private int currentPathIndex = 0;
 
     private void Start()
     {
+        tailSegments.Add(snakeHead);
         if (pathPoints.Length > 0)
         {
             snakeHead.position = pathPoints[0].transform.position;
         }
+        snakeHead.rotation = Quaternion.Euler(0, 0, 90f);
 
         InitializeTailSegments();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         MoveSnake();
+        UpdateRotation();
     }
 
     private void MoveSnake()
     {
         Transform target = pathPoints[currentPathIndex].transform;
-        snakeHead.position = Vector3.MoveTowards(snakeHead.position, target.position, speed * Time.deltaTime);
-
-        UpdateRotation(target.position);
-
         for (int i = tailSegments.Count - 1; i > 0; i--)
         {
             tailSegments[i].position = tailSegments[i - 1].position;
         }
-        if (tailSegments.Count > 0)
-        {
-            tailSegments[0].position = snakeHead.position;
-        }
-
-        if (Vector3.Distance(snakeHead.position, target.position) < 0.01f)
-        {
-            currentPathIndex = (currentPathIndex + 1) % pathPoints.Length;
-        }
+        snakeHead.position = new Vector2(snakeHead.position.x + headDirection.x, snakeHead.position.y + headDirection.y);
     }
 
-    private void UpdateRotation(Vector3 targetPosition)
+    private void UpdateRotation()
     {
-        Vector3 direction = (targetPosition - snakeHead.position).normalized;
-
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        if (snakeHead.transform.position == pathPoints[0].transform.position)
         {
-            if (direction.x > 0)
-            {
-                snakeHead.rotation = Quaternion.Euler(0f, 0f, 90f);
-            }
-            else if (direction.x < 0)
-            {
-                snakeHead.rotation = Quaternion.Euler(0f, 0f, 270f);
-            }
+            headDirection = Vector2.right;
+            snakeHead.rotation = Quaternion.Euler(0, 0, 90f);
+            ChangeTransparency(0, 1);
         }
-        else
+        else if (snakeHead.transform.position == pathPoints[1].transform.position)
         {
-            if (direction.y > 0)
-            {
-                snakeHead.rotation = Quaternion.Euler(0f, 0f, 180f);
-            }
-            else if (direction.y < 0)
-            {
-                snakeHead.rotation = Quaternion.Euler(0f, 0f, 0f);
-            }
+            headDirection = Vector2.down;
+            snakeHead.rotation = Quaternion.Euler(0, 0, 0f);
+            ChangeTransparency(1, 2);
+        }
+        else if (snakeHead.transform.position == pathPoints[2].transform.position)
+        {
+            headDirection = Vector2.left;
+            snakeHead.rotation = Quaternion.Euler(0, 0, 270f);
+            ChangeTransparency(2, 3);
+        }
+        else if (snakeHead.transform.position == pathPoints[3].transform.position)
+        {
+            headDirection = Vector2.up;
+            snakeHead.rotation = Quaternion.Euler(0, 0, 180f);
+            ChangeTransparency(3, 0);
         }
     }
 
@@ -82,8 +76,20 @@ public class msSnake : MonoBehaviour
         for (int i = 0; i < initialTailLength; i++)
         {
             Transform segment = Instantiate(snakeSegmentPrefab);
-            segment.position = snakeHead.position - Vector3.right * (i + 1);
+            segment.position = tailSegments[tailSegments.Count - 1].position;
             tailSegments.Add(segment);
         }
+    }
+
+    private void ChangeTransparency(int point1, int point2)
+    {
+        SpriteRenderer sprite1 = pathPoints[point1].GetComponent<SpriteRenderer>();
+        SpriteRenderer sprite2 = pathPoints[point2].GetComponent<SpriteRenderer>();
+        Color color1 = sprite1.color;
+        Color color2 = sprite2.color;
+        color1.a = 0f;
+        color2.a = 255f;
+        sprite1.color = color1;
+        sprite2.color = color2;
     }
 }

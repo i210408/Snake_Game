@@ -1,3 +1,6 @@
+// 21i-0408
+// 21i-0425
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,7 +24,7 @@ public class MainMenuUI : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 1;
-        Time.fixedDeltaTime = 1;
+        Time.fixedDeltaTime = 0.2f;
         EnableMainMenu();
         DisableLevelSelect();
         DisableSettings();
